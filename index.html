@@ -16,7 +16,7 @@
 <body>
 
     <h1>RegrowthInc Game Database</h1>
-    <p>Examplessszzz</p>
+    <p>The table below is loaded live from your Excel/CSV file:</p>
 
     <table id="dataTable">
         <thead>
@@ -33,32 +33,41 @@
     <script>
         async function loadTable() {
             try {
-                const response = await fetch('example.csv');
-                const csvText = await response.text();
-                
-            
-                if (csvText.trim().startsWith('<!DOCTYPE html>') || csvText.includes('File not found')) {
-                    throw new Error("example.csv was not found by GitHub Pages yet!");
+                let response = await fetch('Example.csv').catch(() => null);
+                if (!response || !response.ok) {
+                    response = await fetch('example.csv');
                 }
                 
-                const rows = csvText.split('\n');
+                const csvText = await response.text();
+                
+                if (csvText.trim().startsWith('<!DOCTYPE html>') || csvText.includes('File not found')) {
+                    throw new Error("CSV file was not found!");
+                }
+                
+                const rows = csvText.split(/\r?\n/);
                 const tbody = document.querySelector('#dataTable tbody');
                 tbody.innerHTML = ""; 
 
+                const separator = csvText.includes(';') ? ';' : ',';
+
                 rows.forEach((row, index) => {
-                    if (index === 0 || !row.trim()) return;
+                    if (index === 0 || !row.trim()) return; 
                     
-                    const cols = row.split(',');
+                    const cols = row.split(separator);
                     if (cols.length >= 2) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `<td>${cols[0].trim()}</td><td>${cols[1].trim()}</td>`;
                         tbody.appendChild(tr);
                     }
                 });
+
+                if (tbody.innerHTML === "") {
+                    tbody.innerHTML = `<tr><td colspan="2" class="error">File loaded, but no valid data rows were found.</td></tr>`;
+                }
             } catch (error) {
                 console.error("Error:", error);
                 const tbody = document.querySelector('#dataTable tbody');
-                tbody.innerHTML = `<tr><td colspan="2" class="error">Failed to load data! Please ensure example.csv is in the root directory of your repository.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" class="error">Failed to load data! Please check your CSV file.</td></tr>`;
             }
         }
 
