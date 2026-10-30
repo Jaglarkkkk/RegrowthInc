@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Veriler buraya otomatik eklenecek -->
+            
         </tbody>
     </table>
 
@@ -37,10 +37,10 @@
                 
                 const rows = csvText.split('\n');
                 const tbody = document.querySelector('#dataTable tbody');
-                tbody.innerHTML = ""; // Önceki içeriği temizle
+                tbody.innerHTML = ""; 
 
                 rows.forEach((row, index) => {
-                    if (index === 0 || !row.trim()) return; // Başlığı ve boş satırları atla
+                    if (index === 0 || !row.trim()) return; 
                     
                     const cols = row.split(',');
                     if (cols.length >= 2) {
