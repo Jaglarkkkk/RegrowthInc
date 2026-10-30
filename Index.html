@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegrowthInc Wiki & Veritabanı</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #121212; color: #e0e0e0; }
+        h1 { color: #4CAF50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: left; }
+        th { background-color: #2e2e2e; color: #4CAF50; }
+    </style>
+</head>
+<body>
+
+    <h1>RegrowthInc Oyun Veritabanı</h1>
+    <p>Aşağıdaki liste Excel'den (`example.csv`) canlı olarak çekilmektedir:</p>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>İsim</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Veriler buraya otomatik eklenecek -->
+        </tbody>
+    </table>
+
+    <script>
+        async function loadTable() {
+            try {
+                const response = await fetch('example.csv');
+                const csvText = await response.text();
+                
+                const rows = csvText.split('\n');
+                const tbody = document.querySelector('#dataTable tbody');
+                tbody.innerHTML = ""; // Önceki içeriği temizle
+
+                rows.forEach((row, index) => {
+                    if (index === 0 || !row.trim()) return; // Başlığı ve boş satırları atla
+                    
+                    const cols = row.split(',');
+                    if (cols.length >= 2) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${cols[0].trim()}</td><td>${cols[1].trim()}</td>`;
+                        tbody.appendChild(tr);
+                    }
+                });
+            } catch (error) {
+                console.error("Veri yüklenirken hata oluştu:", error);
+            }
+        }
+
+        loadTable();
+    </script>
+
+</body>
+</html>
